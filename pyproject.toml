@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "token-diet"
+version = "0.1.0"
+description = "Local, token-saving, intelligence-preserving context layer for AI coding tools"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "aryxnsdfs" }]
+keywords = ["llm", "context", "mcp", "tokens", "claude", "codex", "aider"]
+
+[project.urls]
+Homepage = "https://github.com/aryxnsdfs/token-diet"
+Repository = "https://github.com/aryxnsdfs/token-diet"
+Issues = "https://github.com/aryxnsdfs/token-diet/issues"
+dependencies = [
+    "networkx>=3.0",
+]
+
+[project.optional-dependencies]
+# Full feature set. Core runs without these via graceful fallbacks.
+mcp = ["mcp>=1.2.0"]
+proxy = ["fastapi>=0.110", "uvicorn>=0.27", "httpx>=0.27"]
+index = ["tree-sitter>=0.21", "tree-sitter-language-pack>=0.2", "watchdog>=4.0"]
+tokenize = ["tiktoken>=0.6"]
+docs = ["markitdown>=0.0.1"]
+providers = ["anthropic>=0.40", "openai>=1.0"]
+all = [
+    "mcp>=1.2.0",
+    "fastapi>=0.110", "uvicorn>=0.27", "httpx>=0.27",
+    "tree-sitter>=0.21", "tree-sitter-language-pack>=0.2", "watchdog>=4.0",
+    "tiktoken>=0.6",
+    "markitdown>=0.0.1",
+    "anthropic>=0.40", "openai>=1.0",
+]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.23"]
+
+[project.scripts]
+ctx = "ctx.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["ctx"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
