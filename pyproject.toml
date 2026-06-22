@@ -11,14 +11,14 @@ requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "aryxnsdfs" }]
 keywords = ["llm", "context", "mcp", "tokens", "claude", "codex", "aider"]
+dependencies = [
+    "networkx>=3.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/aryxnsdfs/token-diet"
 Repository = "https://github.com/aryxnsdfs/token-diet"
 Issues = "https://github.com/aryxnsdfs/token-diet/issues"
-dependencies = [
-    "networkx>=3.0",
-]
 
 [project.optional-dependencies]
 # Full feature set. Core runs without these via graceful fallbacks.
