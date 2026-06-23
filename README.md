@@ -7,6 +7,78 @@ decision log instead of replayed history, a stable cached prefix, and
 diff-only output. Saving tokens and keeping the model sharp are the same goal —
 see [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## Results
+
+| Metric | Result |
+|---|---|
+| Input tokens cut | **[X]%** |
+| Output tokens cut | **[X2]%** |
+| Repositories tested | **[Y]** |
+| Task quality retained | **[Z]%** |
+| Added latency / request | **[W] ms** |
+
+<sub>Measured by the eval harness (`tests/evals/`) against a held-out task suite.
+Replace the placeholders with your measured numbers.</sub>
+
+## Architecture
+
+```mermaid
+flowchart TB
+    subgraph Client["AI client"]
+        CC["Claude Code / Cowork / Codex / any MCP host"]
+    end
+
+    subgraph Frontends["Front-ends (one engine, two surfaces)"]
+        MCP["Mode A — FastMCP server<br/>prompts (/) + tools + resources"]
+        PROXY["Mode B — FastAPI local proxy<br/>parses /text, intercepts requests"]
+    end
+
+    subgraph Engine["Engine core"]
+        ASM["Assembler<br/>6-layer cache-first prompt"]
+        BUD["Budget<br/>real tokenizer + demote-not-truncate"]
+        IDX["Code index<br/>tree-sitter / regex → symbols + graph"]
+        MAP["Repo map<br/>personalized PageRank"]
+        MEM["Memory<br/>verbatim window + decision log"]
+        DOC["Docs<br/>markitdown + hash cache"]
+        PATCH["Patch engine<br/>SEARCH/REPLACE fuzzy apply"]
+        ROUTE["Router<br/>frontier / cheap / local tiers"]
+        TEL["Telemetry<br/>tokens + cache + cost"]
+    end
+
+    subgraph Store["Per-project state (.ctx/)"]
+        DB[("SQLite<br/>symbols · edges · hashes")]
+        LOG[("decisions.jsonl<br/>append-only")]
+        CACHE[("cache/<br/>parses · docs · telemetry")]
+    end
+
+    PROV["Model provider<br/>Anthropic / OpenAI<br/>(prompt cache)"]
+
+    CC -->|"slash command / message"| MCP
+    CC -->|"custom base URL"| PROXY
+    MCP --> ASM
+    PROXY --> ASM
+    ASM --> BUD
+    ASM --> MAP
+    ASM --> MEM
+    ASM --> DOC
+    MAP --> IDX
+    IDX --- DB
+    MEM --- LOG
+    DOC --- CACHE
+    ASM -->|"cached prefix + fresh tail"| ROUTE
+    ROUTE --> PROV
+    PROV -->|"diff-only reply"| PATCH
+    PATCH -->|"apply edits"| CC
+    ROUTE --> TEL
+    TEL --- CACHE
+```
+
+**Flow:** client request → front-end → assembler stacks 6 layers (system ·
+repo map · decision log · snippets · recent turns · message), cache breakpoint
+on the stable prefix → router dispatches to the right model tier → provider
+returns a diff → patch engine applies edits back to files. Token + cache cost
+logged every request.
+
 ## Install
 
 ```bash
