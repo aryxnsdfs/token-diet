@@ -120,7 +120,7 @@ ctx doctor               # check everything is working
 ```
 
 Then open **Claude Code** in that project and press **`/`** — you'll see the
-commands. Type `/init` as your first message to start a session.
+commands. Type `/start` as your first message to start a session.
 
 ---
 
@@ -128,14 +128,14 @@ commands. Type `/init` as your first message to start a session.
 
 | Command | What it does |
 |---|---|
-| `/init` | **Start a session** — scans your code, shows the map, turns on smart mode |
-| `/map` | **Show code structure** — a ranked overview of your project (not every file) |
-| `/focus auth.py` | **Zoom into a file** — pulls the full file into the conversation |
-| `/explain MyClass` | **Explain one thing** — shows just that function or class |
-| `/diff` | **Compact replies** — AI only writes the lines it's changing |
-| `/compress` | **Free up space** — summarizes old chat into key decisions |
-| `/cost` | **See savings** — how many tokens saved, cache hits, money saved |
-| `/route local` | **Switch AI model** — use a cheap/free local model for simple tasks |
+| `/start` | **Start a session** — scans your code, shows the overview, turns on smart mode |
+| `/overview` | **Show code structure** — a ranked overview of your project (not every file) |
+| `/show auth.py` | **Zoom into a file** — pulls the full file into the conversation |
+| `/lookup MyClass` | **Look up one thing** — shows just that function or class |
+| `/compact` | **Compact replies** — AI only writes the lines it's changing |
+| `/cleanup` | **Free up space** — summarizes old chat into key decisions |
+| `/savings` | **See savings** — how many tokens saved, cache hits, money saved |
+| `/model local` | **Switch AI model** — use a cheap/free local model for simple tasks |
 
 ---
 

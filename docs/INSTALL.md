@@ -50,11 +50,11 @@ After `ctx init`, just open Claude Code in your project folder. It connects
 automatically. Press `/` and you'll see the commands.
 
 ```
-/init           Start a session (scan code, show map, turn on smart mode)
-/map            Show your project structure
-/focus FILE     Pull a specific file into the chat
-/explain FUNC   Show a specific function or class
-/cost           See how many tokens you saved
+/start          Start a session (scan code, show overview, turn on smart mode)
+/overview       Show your project structure
+/show FILE      Pull a specific file into the chat
+/lookup FUNC    Show a specific function or class
+/savings        See how many tokens you saved
 ```
 
 If it doesn't auto-connect, run this manually:
@@ -87,7 +87,7 @@ export ANTHROPIC_API_KEY=sk-...        # or OPENAI_API_KEY
 
 Then change your tool's **API base URL** to `http://127.0.0.1:8000`.
 
-Type `/map`, `/focus auth.py`, etc. as regular messages — the proxy
+Type `/overview`, `/show auth.py`, etc. as regular messages — the proxy
 understands them.
 
 ---
