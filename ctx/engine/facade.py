@@ -154,12 +154,18 @@ class Engine:
         """In-chat init (§4.1): build index, inject map, switch on diff mode."""
         counts = self.build_index()
         self.diff_mode_on = True
-        m = self.map()
+        # Use a smaller budget for the start map so MCP response stays fast.
+        from .repomap import render_map
+        overview = render_map(
+            self.index, token_budget=2000, model=self.model,
+        )
         text = (
             "ctx engine connected.\n"
             f"Indexed {counts['symbols']} symbols across "
             f"{counts['parsed'] + counts['skipped']} files "
             f"({counts['parsed']} parsed, {counts['skipped']} cached).\n"
-            "Diff-only output mode ON.\n\n" + m.text
+            "Diff-only output mode ON.\n"
+            "Use /overview for full map, /show <file> to pull a file.\n\n"
+            + overview
         )
         return CommandResult(text, {"index": counts})
