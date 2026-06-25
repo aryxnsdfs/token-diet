@@ -51,10 +51,10 @@ automatically. Press `/` and you'll see the commands.
 
 ```
 /start          Start a session (scan code, show overview, turn on smart mode)
-/overview       Show your project structure
-/show FILE      Pull a specific file into the chat
-/lookup FUNC    Show a specific function or class
-/savings        See how many tokens you saved
+/showrepo       Show your whole project structure
+/openfile FILE  Open a specific file in the chat
+/findcode FUNC  Find a specific function or class
+/showstats      See how many tokens you saved
 ```
 
 If it doesn't auto-connect, run this manually:
@@ -87,7 +87,7 @@ export ANTHROPIC_API_KEY=sk-...        # or OPENAI_API_KEY
 
 Then change your tool's **API base URL** to `http://127.0.0.1:8000`.
 
-Type `/overview`, `/show auth.py`, etc. as regular messages — the proxy
+Type `/showrepo`, `/openfile auth.py`, etc. as regular messages — the proxy
 understands them.
 
 ---

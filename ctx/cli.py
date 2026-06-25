@@ -115,7 +115,7 @@ def cmd_map(args: argparse.Namespace) -> int:
     engine = _engine()
     if not engine.index.symbol_count():
         engine.build_index()
-    print(engine.map(args.path or "").text)
+    print(engine.map(getattr(args, "path", "") or "").text)
     return 0
 
 
@@ -149,14 +149,16 @@ def build_parser() -> argparse.ArgumentParser:
     pd = sub.add_parser("doctor", help="verify wiring and optional deps")
     pd.set_defaults(func=cmd_doctor)
 
-    pm = sub.add_parser("overview", help="show your project structure")
+    pm = sub.add_parser("showrepo", help="show the whole project structure")
     pm.add_argument("path", nargs="?")
     pm.set_defaults(func=cmd_map)
-    sub.add_parser("map", help="(alias for overview)").set_defaults(func=cmd_map)
+    for alias in ("overview", "map"):
+        sub.add_parser(alias, help=f"(alias for showrepo)").set_defaults(func=cmd_map)
 
-    pc = sub.add_parser("savings", help="see how many tokens you saved")
+    pc = sub.add_parser("showstats", help="show token and cost savings")
     pc.set_defaults(func=cmd_cost)
-    sub.add_parser("cost", help="(alias for savings)").set_defaults(func=cmd_cost)
+    for alias in ("savings", "cost"):
+        sub.add_parser(alias, help=f"(alias for showstats)").set_defaults(func=cmd_cost)
     return p
 
 

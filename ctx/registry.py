@@ -31,25 +31,25 @@ class Cmd:
 def build_registry(engine: Engine) -> dict[str, Cmd]:
     """Bind handlers to a live engine. Mirrors §5.1's COMMANDS table."""
     return {
-        "start": Cmd("start", "Start a session — scan code, show overview, turn on smart mode",
+        "start": Cmd("start", "Start a coding session — scan code, show overview, turn on smart mode",
                      "", lambda **kw: engine.start(), as_tool=False),
-        "overview": Cmd("overview", "Show your project structure (ranked by relevance)", "[path]",
+        "showrepo": Cmd("showrepo", "Show the whole project structure (ranked by relevance)", "[path]",
                         lambda path="", **kw: engine.map(path)),
-        "show": Cmd("show", "Pull a specific file or function into the chat", "<file|symbol>",
-                    lambda target="", **kw: engine.focus(target)),
-        "lookup": Cmd("lookup", "Show the code of one function or class", "<symbol>",
-                      lambda symbol="", **kw: engine.explain(symbol)),
-        "compact": Cmd("compact", "Make the AI reply with only changed lines", "",
-                       lambda **kw: engine.diff_mode()),
-        "cleanup": Cmd("cleanup", "Summarize old chat to free up space", "",
-                       lambda history=None, **kw: engine.compress(history or [])),
-        "savings": Cmd("savings", "See how many tokens you saved", "",
-                       lambda **kw: engine.cost()),
-        "model": Cmd("model", "Switch to a cheaper or local AI model", "<tier>",
-                     lambda tier="", **kw: engine.route(tier)),
-        "patch": Cmd("patch", "Apply code changes from the AI's last reply", "",
-                     lambda text="", dry_run=False, **kw: engine.apply_model_output(
-                         text, dry_run=dry_run)),
+        "openfile": Cmd("openfile", "Open a file — pull it into the chat", "<file|symbol>",
+                        lambda target="", **kw: engine.focus(target)),
+        "findcode": Cmd("findcode", "Find one function or class and show its code", "<symbol>",
+                        lambda symbol="", **kw: engine.explain(symbol)),
+        "shortreply": Cmd("shortreply", "Keep replies short — AI sends only changed lines", "",
+                          lambda **kw: engine.diff_mode()),
+        "clearchat": Cmd("clearchat", "Free up chat space — summarize old messages", "",
+                         lambda history=None, **kw: engine.compress(history or [])),
+        "showstats": Cmd("showstats", "Show token and cost savings", "",
+                         lambda **kw: engine.cost()),
+        "changeai": Cmd("changeai", "Switch AI models (cheaper or local)", "<tier>",
+                        lambda tier="", **kw: engine.route(tier)),
+        "applychanges": Cmd("applychanges", "Apply the AI's code changes to your files", "",
+                            lambda text="", dry_run=False, **kw: engine.apply_model_output(
+                                text, dry_run=dry_run)),
     }
 
 

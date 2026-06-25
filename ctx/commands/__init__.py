@@ -40,7 +40,7 @@ def parse_slash(text: str) -> ParsedCommand | None:
 
 
 # Maps positional CLI/proxy args -> the kwarg each handler expects.
-_ARG0 = {"overview": "path", "show": "target", "lookup": "symbol", "model": "tier"}
+_ARG0 = {"showrepo": "path", "openfile": "target", "findcode": "symbol", "changeai": "tier"}
 
 
 def dispatch(engine: Engine, parsed: ParsedCommand, *, history=None,
@@ -53,8 +53,8 @@ def dispatch(engine: Engine, parsed: ParsedCommand, *, history=None,
     kwargs: dict = {}
     if parsed.name in _ARG0 and parsed.args:
         kwargs[_ARG0[parsed.name]] = parsed.args[0]
-    if parsed.name == "cleanup":
+    if parsed.name == "clearchat":
         kwargs["history"] = history or []
-    if parsed.name == "patch":
+    if parsed.name == "applychanges":
         kwargs["text"] = text
     return cmd.handler(**kwargs)

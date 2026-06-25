@@ -20,7 +20,7 @@ def write_generic(project: Project, engine: Engine) -> list[str]:
         "proxy": {
             "start": "ctx proxy --port 8000",
             "point_client_base_url_to": "http://127.0.0.1:8000",
-            "note": "Type /overview, /show, etc. as the message; the proxy parses it.",
+            "note": "Type /showrepo, /openfile, etc. as the message; the proxy parses it.",
         },
     }
     out = project.ctx_dir / "generic.setup.json"

@@ -165,7 +165,7 @@ class Engine:
             f"{counts['parsed'] + counts['skipped']} files "
             f"({counts['parsed']} parsed, {counts['skipped']} cached).\n"
             "Diff-only output mode ON.\n"
-            "Use /overview for full map, /show <file> to pull a file.\n\n"
+            "Use /showrepo for full map, /openfile <file> to pull a file.\n\n"
             + overview
         )
         return CommandResult(text, {"index": counts})

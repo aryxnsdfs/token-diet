@@ -1,5 +1,5 @@
 ---
-description: Start a session — scan code, show overview, turn on smart mode
+description: Start a coding session — scan code, show overview, turn on smart mode
 ---
 
 Run the ctx `start` command via the MCP server (tool `ctx:start`).

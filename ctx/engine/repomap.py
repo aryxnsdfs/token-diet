@@ -170,5 +170,5 @@ def render_map(
             out.append(f"  {e.symbol.signature}")
     remaining = len(entries) - len(chosen)
     if remaining > 0:
-        out.append(f"\n… {remaining} more symbols (use /show or /lookup to pull detail)")
+        out.append(f"\n… {remaining} more symbols (use /openfile or /findcode to pull detail)")
     return "\n".join(out)
