@@ -31,23 +31,23 @@ class Cmd:
 def build_registry(engine: Engine) -> dict[str, Cmd]:
     """Bind handlers to a live engine. Mirrors §5.1's COMMANDS table."""
     return {
-        "init": Cmd("init", "Warm the chat: build index, inject map, enable diff mode",
+        "init": Cmd("init", "Start a session — scan code, show map, turn on smart mode",
                     "", lambda **kw: engine.start(), as_tool=False),
-        "map": Cmd("map", "Inject the graph-ranked repo map", "[path]",
+        "map": Cmd("map", "Show your project structure (ranked by relevance)", "[path]",
                    lambda path="", **kw: engine.map(path)),
-        "focus": Cmd("focus", "Pin a file or symbol into context", "<file|symbol>",
+        "focus": Cmd("focus", "Pull a specific file or function into the chat", "<file|symbol>",
                      lambda target="", **kw: engine.focus(target)),
-        "explain": Cmd("explain", "Pull just one symbol's body", "<symbol>",
+        "explain": Cmd("explain", "Show the code of one function or class", "<symbol>",
                        lambda symbol="", **kw: engine.explain(symbol)),
-        "diff": Cmd("diff", "Force diff-only output mode", "",
+        "diff": Cmd("diff", "Make the AI reply with only changed lines", "",
                     lambda **kw: engine.diff_mode()),
-        "compress": Cmd("compress", "Distill history to the decision log now", "",
+        "compress": Cmd("compress", "Summarize old chat to free up space", "",
                         lambda history=None, **kw: engine.compress(history or [])),
-        "cost": Cmd("cost", "Show token + cache telemetry", "",
+        "cost": Cmd("cost", "See how many tokens you saved", "",
                     lambda **kw: engine.cost()),
-        "route": Cmd("route", "Force a model tier", "<tier>",
+        "route": Cmd("route", "Switch to a cheaper or local AI model", "<tier>",
                      lambda tier="", **kw: engine.route(tier)),
-        "apply": Cmd("apply", "Apply SEARCH/REPLACE edits from the last reply", "",
+        "apply": Cmd("apply", "Apply code changes from the AI's last reply", "",
                      lambda text="", dry_run=False, **kw: engine.apply_model_output(
                          text, dry_run=dry_run)),
     }

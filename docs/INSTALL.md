@@ -1,36 +1,28 @@
-# Installing token-diet
+# How to install token-diet
 
-`token-diet` ships the `ctx` command. Install it once, then wire it into
-whichever AI tool you use. The core runs with **zero heavy dependencies** via
-graceful fallbacks; install extras to upgrade each piece. `ctx doctor` always
-shows what's active.
+token-diet gives you a command called `ctx`. Install it once, then use it in
+any project with any AI coding tool.
 
 ---
 
-## 1. Install the `ctx` command
+## Step 1 — Install
 
-Pick one. `pipx` is recommended — it isolates the tool on your PATH.
+Pick whichever works for you:
 
 ```bash
-# from PyPI (recommended)
-pipx install token-diet
+# From GitHub (works right now)
+pip install 'git+https://github.com/aryxnsdfs/token-diet'
 
-# full feature set (MCP server + proxy + tree-sitter + tiktoken + doc pipeline)
-pipx install 'token-diet[all]'
+# With all features (better code scanning, exact token counting, doc support)
+pip install 'token-diet[all]'
 
-# straight from GitHub (no PyPI needed)
-pipx install 'git+https://github.com/aryxnsdfs/token-diet'
-
-# plain pip / virtualenv
-pip install token-diet            # or:  pip install 'token-diet[all]'
-
-# from source (development)
+# For development (if you want to modify it)
 git clone https://github.com/aryxnsdfs/token-diet
 cd token-diet
 pip install -e '.[all,dev]'
 ```
 
-Verify:
+Check it worked:
 
 ```bash
 ctx --help
@@ -38,116 +30,97 @@ ctx --help
 
 ---
 
-## 2. Set up a project (once per repo)
+## Step 2 — Set up your project (once per project)
 
 ```bash
-cd your-project
-ctx init          # builds the index, registers with the detected host
-ctx doctor        # confirms wiring + shows active optional deps
+cd your-project       # go to the project you want to use it on
+ctx init              # scans your code, creates config files
+ctx doctor            # checks everything is working
 ```
 
-`ctx init` writes:
-
-| File | Purpose |
-|---|---|
-| `.mcp.json` | Claude Code launches `ctx serve` from this |
-| `.claude/commands/*.md` | native slash commands (belt-and-suspenders) |
-| `.ctx/cowork.connector.json` | connector config for Cowork / Claude.ai |
-| `.ctx/generic.setup.json` | stdio + proxy hints for any other tool |
-| `.ctx/` | engine state — index, config, decision log, cache (gitignored) |
-
-Commit `.mcp.json` and `.claude/commands/` to share the setup with teammates;
-`.ctx/` is regenerated and stays gitignored.
+That's it. `ctx init` creates everything it needs automatically.
 
 ---
 
-## 3. Wire it into your AI tool
+## Step 3 — Connect to your AI tool
 
-### Claude Code (terminal + IDE) — native MCP
+### Claude Code (easiest — works out of the box)
 
-Nothing else to do. After `ctx init`, open Claude Code in the project; it reads
-`.mcp.json`, spawns `ctx serve`, and your commands appear under `/`.
+After `ctx init`, just open Claude Code in your project folder. It connects
+automatically. Press `/` and you'll see the commands.
 
 ```
-/init        warm the chat: build map, enable diff-only output
-/map         inject the graph-ranked repo map
-/focus FILE  pin a file or symbol
-/explain SYM pull one symbol's body
-/cost        token + cache telemetry
+/init           Start a session (scan code, show map, turn on smart mode)
+/map            Show your project structure
+/focus FILE     Pull a specific file into the chat
+/explain FUNC   Show a specific function or class
+/cost           See how many tokens you saved
 ```
 
-Manual registration (if you skipped `ctx init`):
+If it doesn't auto-connect, run this manually:
 
 ```bash
 claude mcp add ctx -- ctx serve
 ```
 
-### Claude Cowork / Claude.ai — connector
+### Claude.ai / Cowork (web browser)
 
-Web apps can't spawn a local process, so run the server reachable over HTTP and
-paste the connector config:
+The web app can't run local programs, so you start the server yourself:
 
 ```bash
-ctx serve --http          # exposes the MCP server over HTTP/SSE
+ctx serve --http          # starts the server on your machine
 ```
 
-Open `.ctx/cowork.connector.json`, copy it into the app's **Connectors /
-Custom MCP** settings. Commands then appear under `/` just like Claude Code.
+Then in the app, go to **Settings → Connectors → Add Custom MCP** and paste
+the config from `.ctx/cowork.connector.json`.
 
-### Codex / any tool with a custom base URL — proxy
+### Codex / Cursor / any other tool
 
-Point the client's API base URL at the local proxy; it optimizes every request
-transparently.
+Run the local proxy — it sits between your tool and the AI:
 
 ```bash
 ctx proxy --port 8000
-# then set the client base URL to:  http://127.0.0.1:8000
+
+# Set your API key
 export ANTHROPIC_API_KEY=sk-...        # or OPENAI_API_KEY
 ```
 
-No `/` autocomplete on these tools — type `/map`, `/focus auth.py`, etc. as the
-message and the proxy parses it.
+Then change your tool's **API base URL** to `http://127.0.0.1:8000`.
 
-### Any other MCP host — stdio
-
-```bash
-ctx serve
-```
-
-Register with the host's MCP config using command `ctx`, args `["serve"]`. See
-`.ctx/generic.setup.json` for the exact snippet.
+Type `/map`, `/focus auth.py`, etc. as regular messages — the proxy
+understands them.
 
 ---
 
-## 4. Optional dependencies
+## Optional extras
 
-Everything below has a fallback; install to upgrade quality. `ctx doctor` lists
-current status.
+Everything works without these, but they make it better. Run `ctx doctor` to
+see what you have.
 
-| Extra | Enables | Fallback when absent |
+| Install with | What it adds | Without it |
 |---|---|---|
-| `[index]` | tree-sitter parse, file watcher | regex symbol parser |
-| `[tokenize]` | exact `tiktoken` counts | ~4 chars/token estimate |
-| `[mcp]` | MCP server (`ctx serve`) | proxy-only (Mode B) |
-| `[proxy]` | FastAPI local proxy | MCP-only (Mode A) |
-| `[docs]` | PDF/Word/Excel → Markdown | text passthrough |
-| `[providers]` | Anthropic/OpenAI SDKs | proxy forwards raw HTTP |
+| `[index]` | Better code scanning (tree-sitter) | Basic regex scanning (still works) |
+| `[tokenize]` | Exact token counting | Rough estimate (~4 chars = 1 token) |
+| `[mcp]` | Slash commands in Claude Code | Proxy-only mode |
+| `[proxy]` | Local proxy for any tool | Slash-commands-only mode |
+| `[docs]` | Convert PDFs, Word, Excel to text | Text files only |
 
 ```bash
-pipx inject token-diet 'token-diet[index,tokenize]'   # add extras later
+pip install 'token-diet[index,tokenize]'     # add specific extras
+pip install 'token-diet[all]'                 # add everything
 ```
 
 ---
 
-## 5. Troubleshooting
+## Something not working?
 
 ```bash
-ctx doctor        # the first thing to run — checks wiring + deps
-ctx index         # force a full re-index
+ctx doctor            # always run this first — it checks everything
+ctx index             # force rescan your code
 ```
 
-- **`/` shows nothing in Claude Code** → confirm `.mcp.json` exists; restart the
-  host; check `ctx doctor`.
-- **`ctx: command not found`** → `pipx ensurepath` then reopen the shell.
-- **Proxy returns "no upstream API key"** → set `ANTHROPIC_API_KEY` /
-  `OPENAI_API_KEY` in the environment running `ctx proxy`.
+| Problem | Fix |
+|---|---|
+| `/` shows nothing in Claude Code | Make sure `.mcp.json` exists in your project. Restart Claude Code. Run `ctx doctor`. |
+| `ctx: command not found` | Run `pip install token-diet` again, then restart your terminal. |
+| Proxy says "no API key" | Set `ANTHROPIC_API_KEY` or `OPENAI_API_KEY` in your terminal before running `ctx proxy`. |
