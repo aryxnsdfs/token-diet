@@ -65,7 +65,7 @@ def serve(project: Project | None = None, *, http: bool = False,
     engine = Engine(project)
     mcp = build_server(engine)
     if not http:
-        mcp.run()  # stdio transport (the default for local hosts)
+        mcp.run(transport="stdio")
         return
     # HTTP/SSE transport for hosted connectors (Cowork / Claude.ai).
     try:
