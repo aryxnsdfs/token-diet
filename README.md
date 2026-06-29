@@ -120,7 +120,7 @@ ctx doctor               # check everything is working
 ```
 
 Then open **Claude Code** in that project and press **`/`** — you'll see the
-commands. Type `/start` as your first message to begin a session.
+commands. Type `/begin` as your first message to begin a session.
 
 ---
 
@@ -128,7 +128,7 @@ commands. Type `/start` as your first message to begin a session.
 
 | Command | What it does |
 |---|---|
-| `/start` | **Start a coding session** — scans your code, shows the overview, turns on smart mode |
+| `/begin` | **Begin a coding session** — scans your code, shows the overview, turns on smart mode |
 | `/showrepo` | **Show the whole project** — a ranked overview of your code (not every file) |
 | `/openfile auth.py` | **Open a file** — pulls the full file into the conversation |
 | `/findcode MyClass` | **Find one function or class** — shows just that piece of code |

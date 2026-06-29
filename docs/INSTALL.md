@@ -50,7 +50,7 @@ After `ctx init`, just open Claude Code in your project folder. It connects
 automatically. Press `/` and you'll see the commands.
 
 ```
-/start          Start a session (scan code, show overview, turn on smart mode)
+/begin          Begin a session (scan code, show overview, turn on smart mode)
 /showrepo       Show your whole project structure
 /openfile FILE  Open a specific file in the chat
 /findcode FUNC  Find a specific function or class

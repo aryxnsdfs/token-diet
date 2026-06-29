@@ -31,7 +31,7 @@ class Cmd:
 def build_registry(engine: Engine) -> dict[str, Cmd]:
     """Bind handlers to a live engine. Mirrors §5.1's COMMANDS table."""
     return {
-        "start": Cmd("start", "Start a coding session — scan code, show overview, turn on smart mode",
+        "begin": Cmd("begin", "Begin a coding session — scan code, show overview, turn on smart mode",
                      "", lambda **kw: engine.start()),
         "showrepo": Cmd("showrepo", "Show the whole project structure (ranked by relevance)", "[path]",
                         lambda path="", **kw: engine.map(path)),
